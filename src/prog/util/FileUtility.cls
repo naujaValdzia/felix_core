@@ -19,12 +19,13 @@ class FileUtility:
             cPath = substring(cPath, index(cPath, '/') + 1).
         end.
         if not cPath matches ('*.cls')
+        then do:
+            if (index (cPath, ".") > 0) and 
+               (index(cPath, ".") < length(cPath) - 2)
             then do:
-                if (index (cPath, ".") > 0) and (index(cPath, ".") < length(cPath) - 2)
-                    then do:
-                        cPath = substring(cPath, index(cPath, ".") + 1).
-                    end.
+                cPath = substring(cPath, index(cPath, ".") + 1).
             end.
+        end.
         return cPath.
     end method.
 end class.

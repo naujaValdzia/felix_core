@@ -72,32 +72,32 @@ class FindUnused:
                        (ufile.type = "COMPILE" or
                        ufile.type = "INCLUDE") no-error.
             if available ufile
-                then do:
-                    vCompileUnit = ufile.info. 
-                    for each bfile where 
-                             (bFile.info <> vCompileUnit and
-                             bFile.compileUnit = ufile.compileUnit and
-                             bFile.systemName = vSystem and
-                             ((index(bfile.info, ".p") <> 0) or
-                             (index(bfile.info, ".cls") <> 0) or
-                             (index(bfile.info, ".i") <> 0))):
+            then do:
+                vCompileUnit = ufile.info. 
+                for each bfile where 
+                         (bFile.info <> vCompileUnit and
+                         bFile.compileUnit = ufile.compileUnit and
+                         bFile.systemName = vSystem and
+                         ((index(bfile.info, ".p") <> 0) or
+                         (index(bfile.info, ".cls") <> 0) or
+                         (index(bfile.info, ".i") <> 0))):
 
-                        find bUsed where 
-                             bUsed.info = bFile.info no-error.
-                        if not available bUsed
-                            then do:
-                                create bUsed.
-                                bUsed.compileUnit = bfile.info.
-                                bUsed.fileName = bfile.fileName.
-                                bUsed.type = bFile.type.
-                                bUsed.systemName = bFile.systemName.
-                                bUsed.info = "***PROGRESS SYSTEM FILE***".
-                                bUsed.isUsed = true.
-                            end.
+                    find bUsed where 
+                         bUsed.info = bFile.info no-error.
+                    if not available bUsed
+                    then do:
+                        create bUsed.
+                        bUsed.compileUnit = bfile.info.
+                        bUsed.fileName = bfile.fileName.
+                        bUsed.type = bFile.type.
+                        bUsed.systemName = bFile.systemName.
+                        bUsed.info = "***PROGRESS SYSTEM FILE***".
                         bUsed.isUsed = true.
-                        assignAsUsed(bFile.info, vSystem).
                     end.
+                    bUsed.isUsed = true.
+                    assignAsUsed(bFile.info, vSystem).
                 end.
+            end.
         end.
     end method.
 
@@ -107,7 +107,7 @@ class FindUnused:
               matching COMPILE and INCLUDE from desired system.
      Notes:   In some cases "info" field may be empty, it is caused by xref analysis.
               If xref consists of include which is separated by two spaces, like this: " yourInclude.i " it
-              is importing "space" to info field, because our import delimiter is space.
+              is importing "space" symbol to info field, because our import delimiter is space.
               Problem solved in importXref file.
     ------------------------------------------------------------------------------*/
 
@@ -119,35 +119,35 @@ class FindUnused:
                 find first ttUsed where 
                            ttUsed.info = file.info no-error.
                 if not available ttUsed
-                    then do:
-                        create ttUsed.
-                        ttUsed.compileUnit = file.compileUnit.
-                        ttUsed.fileName = file.fileName.
-                        ttUsed.type = file.type.
-                        ttUsed.systemName = file.systemName.
-                        ttUsed.info = file.info.
-                        ttUsed.isUsed = false.
+                then do:
+                    create ttUsed.
+                    ttUsed.compileUnit = file.compileUnit.
+                    ttUsed.fileName = file.fileName.
+                    ttUsed.type = file.type.
+                    ttUsed.systemName = file.systemName.
+                    ttUsed.info = file.info.
+                    ttUsed.isUsed = false.
 
-                        if file.info = "" 
-                        then ttUsed.info = "PROBLEM WITH XREF, CHECK GRAMMAR. INCLUDE MAY BE SEPARATED BY TWO SPACES. .i".
-                    end.
+                    if file.info = "" 
+                    then ttUsed.info = "PROBLEM WITH XREF, CHECK GRAMMAR. INCLUDE MAY BE SEPARATED BY TWO SPACES. .i".
+                end.
             end.
         end.
         for each file where 
                  file.systemName = vSystem and file.type = "COMPILE":
         if available file
-            then do:
-                create ttUsed.
-                ttUsed.compileUnit = file.compileUnit.
-                ttUsed.fileName = file.fileName.
-                ttUsed.type = file.type.
-                ttUsed.systemName = file.systemName.
-                ttUsed.info = file.info.
-                ttUsed.isUsed = false.
+        then do:
+            create ttUsed.
+            ttUsed.compileUnit = file.compileUnit.
+            ttUsed.fileName = file.fileName.
+            ttUsed.type = file.type.
+            ttUsed.systemName = file.systemName.
+            ttUsed.info = file.info.
+            ttUsed.isUsed = false.
 
-                if file.info = "" 
-                then ttUsed.info = "PROBLEM WITH XREF, CHECK GRAMMAR. INCLUDE MAY BE SEPARATED BY TWO SPACES. .i".
-            end.
+            if file.info = "" 
+            then ttUsed.info = "PROBLEM WITH XREF, CHECK GRAMMAR. INCLUDE MAY BE SEPARATED BY TWO SPACES. .i".
+        end.
         end.
     end method.
 end class.

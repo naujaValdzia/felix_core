@@ -32,8 +32,8 @@ class ReadXref:
         for each file where file.systemName = cSystem:
             delete file.
         end.
-        for each fieldDB where fielddb.systemName = cSystem:
-            delete fieldDB.
+        for each fielddb where fielddb.systemName = cSystem:
+            delete fielddb.
         end.
         input from os-dir(cDir).
         repeat:
@@ -239,5 +239,4 @@ class ReadXref:
         end.
         input close.
     end method.
-
 end class.

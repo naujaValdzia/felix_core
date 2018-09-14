@@ -75,13 +75,11 @@ class ConnectSystem:
                 then do:
                     cDfName = cFileStream.
                     iDfCounter = iDfCounter + 1.
-                    //message "df " + cDfName.
                 end.
                 else if cFileStream matches ("*.st")
                 then do:
                     cStName = cFileStream.
                     iStCounter = iStCounter + 1.
-                    //message "ifo " +  cStName.
                 end.
         end.
         input close.

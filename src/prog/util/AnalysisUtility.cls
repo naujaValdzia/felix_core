@@ -14,28 +14,6 @@ using Progress.Lang.*.
 block-level on error undo, throw.
 
 class AnalysisUtility: 
- 
-    constructor public AnalysisUtility (  ):
-
-    end constructor.
-
-    method public static character trimPath (pCompilePath as character,
-                                            pAbsolutPath as character,
-                                            output cSourcePath as character):
-                                
-        define variable i as integer no-undo. 
-        pAbsolutPath = replace(pAbsolutPath, pCompilePath, "").  
-        cSourcePath = pAbsolutPath.
-/*        repeat i = 1 to num-entries(pProPath, ";"):                              */
-/*            if index(pAbsolutPath, entry(i, pProPath, ";")) <> 0                 */
-/*            then do:                                                             */
-/*               pAbsolutPath = replace(pAbsolutPath, entry(i, pProPath, ";"), "").*/
-/*            end.                                                                 */
-/*        end.                                                                     */
-        //pAbsolutPath = replace(pAbsolutPath, pSysPath, "").
-        //return pAbsolutPath.
-    end method.
-    
     method public character getNameFromPath (cPath as character):
         do while index (cPath, '/') > 0:
             cPath = substring(cPath, index(cPath, '/') + 1).
@@ -52,5 +30,4 @@ class AnalysisUtility:
         end.     
         return cPath.
     end method.
-    
 end class.

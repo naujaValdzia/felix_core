@@ -17,20 +17,18 @@ class SystemService:
     {ds/dsSystem.i}
     
     method public void createSystem (dataset dsSystem):
+        find ttSystem.
         find first system where
-                   system.systemName = ttsystem.systemName no-error.
-        if available system
+                   system.systemName = ttSystem.systemName no-error.
+        if not available system
         then do:
-            undo.
-        end.
-        else do:
             create system.
             system.systemName = ttSystem.systemName.
             system.localSourcePath = ttSystem.localSourcePath.
             system.systemPropath = ttSystem.systemPropath.
             system.systemDBparameters = ttSystem.systemDBparameters.
-            system.entryPoints = ttsystem.entryPoints.
-            system.systemLocation = ttsystem.systemLocation.
+            system.entryPoints = ttSystem.entryPoints.
+            system.systemLocation = ttSystem.systemLocation.
         end.
     end method.
     
@@ -62,27 +60,13 @@ class SystemService:
     end method.
     
     method public void updateSystem (dataset dsSystem):
-        /*        sysName as character,           */
-        /*        localSourcePath as character,   */
-        /*        systemPropath as character,     */
-        /*        systemDBparameters as character,*/
-        /*        entryPoints as character,       */
-        /*        systemLocation as character     */
-        find first system where 
-                   system.systemName = ttsystem.systemName.
-        if available system
-        then do:
-            buffer-copy ttsystem except ttsystem.systemName to system.
-/*                if ttsystem.localSourcePath <> ? and ttsystem.localSourcePath <> "" then      */
-/*                system.localSourcePath = ttsystem.localSourcePath.                            */
-/*                if ttsystem.systemPropath <> ? and ttsystem.systemPropath <> "" then          */
-/*                system.systemPropath = ttsystem.systemPropath.                                */
-/*                if ttsystem.systemDBparameters <> ? and ttsystem.systemDBparameters <> "" then*/
-/*                system.systemDBparameters = ttsystem.systemDBparameters.                      */
-/*                if ttsystem.entryPoints <> ? and ttsystem.entryPoints <> "" then              */
-/*                system.entryPoints = ttsystem.entryPoints.                                    */
-/*                if ttsystem.systemLocation <> ? and ttsystem.systemLocation <> "" then        */
-/*                system.systemLocation = ttsystem.systemLocation.                              */
+        for each ttSystem: 
+            find first system where 
+                       system.systemName = ttSystem.systemName no-error.
+            if available system
+            then do:
+                buffer-copy ttSystem except ttSystem.systemName ttSystem.id to system.
+            end.
         end.
     end method.
 
