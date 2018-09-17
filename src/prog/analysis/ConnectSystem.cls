@@ -34,6 +34,7 @@ class ConnectSystem:
         then do:
             disconnect value(cDbName).
         end.
+        quit.
     end method.
     
     method public void createDB(cPth as character, output cDbName as character):

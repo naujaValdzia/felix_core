@@ -16,12 +16,18 @@ class SystemService:
     
     {ds/dsSystem.i}
     
-    method public void createSystem (dataset dsSystem):
+    method public void createSystem (dataset dsSystem,
+                                     output vSuccess as logical,
+                                     output vMessage as character):
         find ttSystem.
         find first system where
                    system.systemName = ttSystem.systemName no-error.
-        if not available system
+        if available system
         then do:
+            vSuccess = false.
+            vMessage = "System with with name " + ttsystem.systemName + "already exists. Please choose another one".
+        end.
+        else do:
             create system.
             system.systemName = ttSystem.systemName.
             system.localSourcePath = ttSystem.localSourcePath.
@@ -29,6 +35,8 @@ class SystemService:
             system.systemDBparameters = ttSystem.systemDBparameters.
             system.entryPoints = ttSystem.entryPoints.
             system.systemLocation = ttSystem.systemLocation.
+            vSuccess = true.
+            vMessage = "System successfully created".
         end.
     end method.
     
@@ -59,23 +67,39 @@ class SystemService:
         dataset dsSystem:accept-changes().
     end method.
     
-    method public void updateSystem (dataset dsSystem):
+    method public void updateSystem (dataset dsSystem,
+                                     output vSuccess as logical,
+                                     output vMessage as character):
         for each ttSystem: 
+            do on error undo, throw:
             find first system where 
-                       system.systemName = ttSystem.systemName no-error.
+                       system.systemName = ttSystem.systemName.
+                       
             if available system
             then do:
                 buffer-copy ttSystem except ttSystem.systemName ttSystem.id to system.
+                vSuccess = true.
+                vMessage = "System successfully updated".
+            end.
+            
+            catch updateError as Progress.Lang.Error :
+                vSuccess = false.
+                vMessage = "Unable to find system with matching name".
+            end catch.
             end.
         end.
     end method.
 
-    method public void deleteSystem (sysName as character):
+    method public void deleteSystem (sysName as character,
+                                     output vSuccess as logical,
+                                     output vMessage as character):
         find first system where 
                    system.systemName = sysName.
         if available system
         then do:
             delete system.
+            vSuccess = true.
+            vMessage = "System " + sysName + " has been deleted".
         end.
     end.
 end class.
