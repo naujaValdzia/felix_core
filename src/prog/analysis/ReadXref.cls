@@ -1,16 +1,10 @@
  
  /*------------------------------------------------------------------------
     File        : ReadXref
-    Purpose     : 
-    Syntax      : 
-    Description : 
-    Author(s)   : ppacevicius
-    Created     : Tue Sep 11 17:30:25 EEST 2018
     Notes       : 
   ----------------------------------------------------------------------*/
 
 using Progress.Lang.*.
-
 block-level on error undo, throw.
 
 class ReadXref: 
@@ -25,16 +19,12 @@ class ReadXref:
     end method.
 
     method public void readFromXrefDir (cDir as character, 
-                                       cSystem as character):
+                                        cSystem as character):
         define variable cFileStream as character no-undo format "x(200)".
         define variable cPath as character no-undo format "x(200)".
 
-        for each file where file.systemName = cSystem:
-            delete file.
-        end.
-        for each fielddb where fielddb.systemName = cSystem:
-            delete fielddb.
-        end.
+        deleteOldData(cSystem).
+        
         input from os-dir(cDir).
         repeat:
             import cFileStream.
@@ -163,16 +153,16 @@ class ReadXref:
                 cXrefInformation= trim(cXrefInformation).
                 cXrefInformation = entry(2,cXrefInformation," ").
 
-                create fieldDB.
+                create dbField.
                 assign
-                    fieldDB.fileName = entry(i - 1, cFileName, "/")
-                    fieldDB.sourceName = entry(i2 - 1, cSourceName, "/")
-                    fieldDB.sourcePath = cSourcePath
-                    fieldDB.line = integer(cLineNumber)
-                    fieldDB.type = "INDEX"
-                    fieldDB.info = cXrefInformation
-                    fieldDB.compileUnit = cCompileUnit
-                    fielddb.systemName = cSystem.
+                    dbField.fileName = entry(i - 1, cFileName, "/")
+                    dbField.sourceName = entry(i2 - 1, cSourceName, "/")
+                    dbField.sourcePath = cSourcePath
+                    dbField.line = integer(cLineNumber)
+                    dbField.type = "INDEX"
+                    dbField.info = cXrefInformation
+                    dbField.compileUnit = cCompileUnit
+                    dbField.systemName = cSystem.
             end.
             else if cXrefType = "INVOKE"
             then do:
@@ -224,19 +214,28 @@ class ReadXref:
                     then cXrefInformation = substring(cXrefInformation, index(cXrefInformation,".") + 1).
                     cXrefInformation = replace(cXrefInformation," ",".").
 
-                    create fieldDB.
+                    create dbField.
                     assign
-                        fieldDB.fileName = entry(i - 1, cFileName, "/")
-                        fieldDB.sourceName = entry(i2 - 1, cSourceName, "/")
-                        fieldDB.sourcePath = cSourcePath
-                        fieldDB.line = integer(cLineNumber)
-                        fieldDB.type = cXrefType
-                        fieldDB.info = cXrefInformation
-                        fieldDB.compileUnit = cCompileUnit
-                        fielddb.systemName = cSystem.
+                        dbField.fileName = entry(i - 1, cFileName, "/")
+                        dbField.sourceName = entry(i2 - 1, cSourceName, "/")
+                        dbField.sourcePath = cSourcePath
+                        dbField.line = integer(cLineNumber)
+                        dbField.type = cXrefType
+                        dbField.info = cXrefInformation
+                        dbField.compileUnit = cCompileUnit
+                        dbField.systemName = cSystem.
                 end.
             end.
         end.
         input close.
+    end method.
+    
+    method public void deleteOldData (vSystem as character):
+        for each file where file.systemName = vSystem:
+            delete file.
+        end.
+        for each dbField where dbField.systemName = vSystem:
+            delete dbField.
+        end.
     end method.
 end class.

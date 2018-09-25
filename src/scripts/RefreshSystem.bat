@@ -1,6 +1,7 @@
 set FELIX-SYSTEM-NAME=%1
 set DLC=C:\progress\openedge
-start /min %DLC%\bin\prowin -b -p ../prog/analysis/systemFind.p -basekey "INI" -ininame FelixPropath -db felixdb -S 9000
+set CURRENT-DIR=%cd%
+%DLC%\bin\prowin -b -p ../prog/analysis/systemFind.p -basekey "INI" -ininame FelixPropath -db felixdb -S 9000
 
 :waitloop
 IF EXIST %TEMP%"\compile.done" GOTO waitloopend

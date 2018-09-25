@@ -5,7 +5,17 @@ for each file where
     delete file.
 end.
 
-for each fieldDB where 
-         fieldDB.system = system.systemName:
-    delete fieldDB.
+for each dbField where 
+         dbField.system = system.systemName:
+    delete dbField.
+end.
+
+for each error where
+         error.systemName = system.systemName:
+    delete error.
+end.
+
+for each unused where
+         unused.systemName = system.systemName:
+    delete unused.
 end.

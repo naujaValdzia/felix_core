@@ -1,11 +1,6 @@
  
  /*------------------------------------------------------------------------
-    File        : systemService
-    Purpose     : 
-    Syntax      : 
-    Description : 
-    Author(s)   : ppacevicius
-    Created     : Wed Sep 05 15:45:32 EEST 2018
+    File        : SystemService
     Notes       : 
   ----------------------------------------------------------------------*/
 
@@ -19,51 +14,74 @@ class SystemService:
     method public void createSystem (dataset dsSystem,
                                      output vSuccess as logical,
                                      output vMessage as character):
+        define buffer bSystem for system.
         find ttSystem.
-        find first system where
-                   system.systemName = ttSystem.systemName no-error.
-        if available system
+        
+        if ttSystem.systemName <> "" 
         then do:
-            vSuccess = false.
-            vMessage = "System with with name " + ttsystem.systemName + "already exists. Please choose another one".
+            if index(ttSystem.systemPropath,";") <> 0 or
+               index(ttSystem.entryPoints,";") <> 0 or
+               index(ttSystem.systemDBparameters,";") <> 0 or
+               index(ttSystem.localSourcePath,";") <> 0
+            then do:
+                ttSystem.systemPropath = replace(ttSystem.systemPropath,";",",").
+                ttSystem.entryPoints = replace(ttSystem.entryPoints,";",",").
+                ttSystem.systemDBparameters = replace(ttSystem.systemDBparameters,";",",").
+                ttSystem.localSourcePath = replace(ttSystem.localSourcePath,";",",").
+            end.
+                
+            find first bSystem where
+                       bSystem.systemName = ttSystem.systemName no-error.
+            if available bSystem
+            then do:
+                vSuccess = false.
+                vMessage = "System with with name " + ttSystem.systemName + "already exists. Please choose another one".
+            end.
+            else do:
+                create system.
+                system.systemName = ttSystem.systemName.
+                system.localSourcePath = replace(ttSystem.localSourcePath,"\","/").
+                system.systemPropath = replace(ttSystem.systemPropath,"\","/").
+                system.systemDBparameters = replace(ttSystem.systemDBparameters,"\","/").
+                system.entryPoints = replace(ttSystem.entryPoints,"\","/").                
+                vSuccess = true.
+                vMessage = "System has been successfully created".
+            end.
         end.
         else do:
-            create system.
-            system.systemName = ttSystem.systemName.
-            system.localSourcePath = ttSystem.localSourcePath.
-            system.systemPropath = ttSystem.systemPropath.
-            system.systemDBparameters = ttSystem.systemDBparameters.
-            system.entryPoints = ttSystem.entryPoints.
-            system.systemLocation = ttSystem.systemLocation.
-            vSuccess = true.
-            vMessage = "System successfully created".
+            vSuccess = false.
+            vMessage = "Unable to create system with no name. Please retry.".
         end.
     end method.
     
     method public void systemList (output dataset dsSystem):
+        define buffer bSystem for system.
         dataset dsSystem:empty-dataset().
-        for each system:
+        
+        for each bSystem:
             create ttSystem.
-            ttSystem.systemName = system.systemName.
-            ttSystem.id = system.id.
+            ttSystem.systemName = bSystem.systemName.
+            ttSystem.hasErrors = bSystem.hasErrors.
+            ttSystem.id = bSystem.id.
         end.
         dataset dsSystem:accept-changes().
     end method.    
     
     method public void systemInfo (sysName as character, 
                                    output dataset dsSystem):
+        define buffer bSystem for system.
         dataset dsSystem:empty-dataset().
-        find first system where 
-                   system.systemName = sysName.
+        
+        find first bSystem where 
+                   bSystem.systemName = sysName.
             create ttSystem.
-            ttSystem.systemName = system.systemName.
-            ttSystem.systemPropath = system.systemPropath.
-            ttSystem.systemLocation = system.systemLocation.
-            ttSystem.systemDBparameters = system.systemDBparameters.
-            ttSystem.localSourcePath = system.localSourcePath.
-            ttSystem.hasErrors = system.hasErrors.
-            ttSystem.entryPoints = system.entryPoints.
-            ttSystem.id = system.id.
+            ttSystem.systemName = bSystem.systemName.
+            ttSystem.systemPropath = bSystem.systemPropath.
+            ttSystem.systemDBparameters = bSystem.systemDBparameters.
+            ttSystem.localSourcePath = bSystem.localSourcePath.
+            ttSystem.hasErrors = bSystem.hasErrors.
+            ttSystem.entryPoints = bSystem.entryPoints.
+            ttSystem.id = bSystem.id.
         dataset dsSystem:accept-changes().
     end method.
     
@@ -77,9 +95,19 @@ class SystemService:
                        
             if available system
             then do:
-                buffer-copy ttSystem except ttSystem.systemName ttSystem.id to system.
+                buffer-copy ttSystem except ttSystem.systemName ttSystem.id ttSystem.hasErrors to system.
+                if index(system.systemPropath,";") <> 0 or
+                   index(system.entryPoints,";") <> 0 or
+                   index(system.systemDBparameters,";") <> 0 or
+                   index(system.localSourcePath,";") <> 0
+                then do:
+                    system.systemPropath = replace(system.systemPropath,";",",").
+                    system.entryPoints = replace(system.entryPoints,";",",").
+                    system.systemDBparameters = replace(system.systemDBparameters,";",",").
+                    system.localSourcePath = replace(system.localSourcePath,";",",").
+                end.
                 vSuccess = true.
-                vMessage = "System successfully updated".
+                vMessage = "System has been successfully updated".
             end.
             
             catch updateError as Progress.Lang.Error :

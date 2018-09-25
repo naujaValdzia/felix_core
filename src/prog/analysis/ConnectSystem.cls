@@ -1,16 +1,10 @@
- 
+  
  /*------------------------------------------------------------------------
     File        : ConnectSystem
-    Purpose     : 
-    Syntax      : 
-    Description : 
-    Author(s)   : ppacevicius
-    Created     : Tue Sep 11 16:37:51 EEST 2018
     Notes       : 
   ----------------------------------------------------------------------*/
 
 using Progress.Lang.*.
-
 block-level on error undo, throw.
 
 class ConnectSystem: 
@@ -25,7 +19,7 @@ class ConnectSystem:
         if ttSystemInfo.systemDBparameters <> ""
         then do:
             createDB(ttSystemInfo.systemDBparameters, output cDbName).
-            connect value(ttSystemInfo.systemDBparameters + "\" + cDbName) -1.
+            connect value(ttSystemInfo.systemDBparameters + "\" + cDbName) -1 no-error.
         end.
         os-create-dir value(os-getenv("TEMP") + "/" + ttSystemInfo.systemName).
         
@@ -67,21 +61,21 @@ class ConnectSystem:
         input from os-dir(cPth).
         repeat:
             import cFileStream.
-                if cFileStream matches ("*.db")
-                then do:
-                    cDbName = replace(cFileStream, ".db", "").
-                    iDbCounter = iDbCounter + 1.
-                end.
-                else if cFileStream matches ("*.df")
-                then do:
-                    cDfName = cFileStream.
-                    iDfCounter = iDfCounter + 1.
-                end.
-                else if cFileStream matches ("*.st")
-                then do:
-                    cStName = cFileStream.
-                    iStCounter = iStCounter + 1.
-                end.
+            if cFileStream matches ("*.db")
+            then do:
+                cDbName = replace(cFileStream, ".db", "").
+                iDbCounter = iDbCounter + 1.
+            end.
+            else if cFileStream matches ("*.df")
+            then do:
+                cDfName = cFileStream.
+                iDfCounter = iDfCounter + 1.
+            end.
+            else if cFileStream matches ("*.st")
+            then do:
+                cStName = cFileStream.
+                iStCounter = iStCounter + 1.
+            end.
         end.
         input close.
         

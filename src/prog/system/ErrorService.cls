@@ -1,16 +1,10 @@
  
  /*------------------------------------------------------------------------
-    File        : errorService
-    Purpose     : 
-    Syntax      : 
-    Description : 
-    Author(s)   : ppacevicius
-    Created     : Wed Sep 05 15:45:00 EEST 2018
+    File        : ErrorService
     Notes       : 
   ----------------------------------------------------------------------*/
 
 using Progress.Lang.*.
-
 block-level on error undo, throw.
 
 class ErrorService: 
@@ -18,14 +12,16 @@ class ErrorService:
 
     method public void getError(sysName as character, 
                                 output dataset dsError):
+        define buffer bError for error.
         dataset dsError:empty-dataset().
-        for each error no-lock where 
-                 error.systemName = sysName:
+        
+        for each bError no-lock where 
+                 bError.systemName = sysName:
             create ttError.
-            ttError.filePath = error.filePath.
-            ttError.systemName = error.systemName.
-            ttError.errorMessage = error.errorMessage.
-            ttError.id = error.id.
+            ttError.filePath = bError.filePath.
+            ttError.systemName = bError.systemName.
+            ttError.errorMessage = bError.errorMessage.
+            ttError.id = bError.id.
         end.
         dataset dsError:accept-changes ().
     end method.    

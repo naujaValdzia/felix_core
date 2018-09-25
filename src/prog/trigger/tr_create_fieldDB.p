@@ -1,3 +1,3 @@
-trigger procedure for create of fieldDB.
+trigger procedure for create of dbField.
 
-assign fieldDB.id = next-value(sqId).
+assign dbField.id = next-value(sqId).

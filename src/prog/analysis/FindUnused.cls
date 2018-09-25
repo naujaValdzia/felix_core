@@ -1,16 +1,10 @@
  
  /*------------------------------------------------------------------------
     File        : FindUnused
-    Purpose     : To write data into unused table if file is not (directly and not) used by entered entry points.
-    Syntax      : 
-    Description : 
-    Author(s)   : ppacevicius
-    Created     : Tue Sep 11 10:11:30 EEST 2018
     Notes       : 
   ----------------------------------------------------------------------*/
 
 using Progress.Lang.*.
-
 block-level on error undo, throw.
 
 class FindUnused: 
@@ -25,6 +19,7 @@ class FindUnused:
         define variable vEntryPoints as character format "x(100)" no-undo extent 100.
         
         vSystem = os-getenv("FELIX-SYSTEM-NAME").
+        deleteOldUnused(vSystem).
         
         find first system where 
                    system.systemName = vSystem.
@@ -38,11 +33,6 @@ class FindUnused:
             vEntryPoints = entry(i,system.entryPoints,",").
             assignAsUsed(vEntryPoints[i],vSystem).
         end.   
-        
-        for each unused where 
-                 unused.systemName = vSystem:
-            delete unused.    
-        end.
           
         for each bUsed where 
                  bUsed.isUsed = false exclusive-lock:
@@ -148,6 +138,13 @@ class FindUnused:
             if file.info = "" 
             then ttUsed.info = "PROBLEM WITH XREF, CHECK GRAMMAR. INCLUDE MAY BE SEPARATED BY TWO SPACES. .i".
         end.
+        end.
+    end method.
+    
+    method public void deleteOldUnused (vSystem as character):
+        for each unused where 
+                 unused.systemName = vSystem:
+            delete unused.    
         end.
     end method.
 end class.
