@@ -45,7 +45,7 @@ class FindUnused:
                 unused.info = bused.info.
             end.
         end.
-    end.
+    end method.
     
     /*------------------------------------------------------------------------------
      Purpose: To assign files as "used"

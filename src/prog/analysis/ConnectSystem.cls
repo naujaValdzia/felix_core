@@ -82,7 +82,7 @@ class ConnectSystem:
         creation:
         do transaction:
             if cStName <> ""
-            then do:    
+            then do:
                 if replace(cStName, ".st", "") <> replace(cDfName, ".df", "")
                 then do:
                     output to value(cError).
@@ -99,22 +99,22 @@ class ConnectSystem:
                 output close.
                 undo creation, leave creation.
             end.
-            
-            cDelDb = "%DLC%\bin\prodel " + cPth + cDbName.
+
+            //cDelDb = "%DLC%\bin\prodel " + cPth + cDbName.
             cLoadSt = "%DLC%\bin\prostrct add " + cPth + replace(cStName, ".st", "") + " " + cPth + cStName.
             if cDbName = ?
             then do:
                 cDbName = replace(cDfName, ".df", "").
                 cDelBi = "%DLC%\bin\prostrct remove " + cPth + cDbName + " bi".
                 cTrunBi = "%DLC%\bin\proutil " + cPth + cDbName + ".db" + " -C truncate bi".
-                
+
                 create database cPth + cDbName from "EMPTY".
                 if cStName <> ""
                 then do:
                     os-command silent value(cTrunBi).
                     os-command silent value(cDelBi).
                     os-command silent value(cLoadSt).
-                end.   
+                end.
                 connect value(cPth + cDbName) -1.
                 create alias DICTDB for database value(cDbName).
                 run prodict/load_df.p (cPth + cDfName).
@@ -122,18 +122,18 @@ class ConnectSystem:
             end.
             else do:
                 cDbName = replace(cDfName, ".df", "").
-                os-command value(cDelDb).
-                
+                //os-command value(cDelDb).
+
                 cDelBi = "%DLC%\bin\prostrct remove " + cPth + cDbName + " bi".
                 cTrunBi = "%DLC%\bin\proutil " + cPth + cDbName + ".db" + " -C truncate bi".
-                
+
                 create database cPth + cDbName from "EMPTY".
                 if cStName <> ""
                 then do:
                     os-command silent value(cTrunBi).
                     os-command silent value(cDelBi).
                     os-command silent value(cLoadSt).
-                end.   
+                end.
                 connect value(cPth + cDbName) -1.
                 create alias DICTDB for database value(cDbName).
                 run prodict/load_df.p (cPth + cDfName).
@@ -144,14 +144,13 @@ class ConnectSystem:
     
     method public void compileXref(cInputDir as character, cOutputDir as character):
         define variable cInputPath as character no-undo.
-
         cInputPath = cInputDir.
         input from os-dir(cInputDir).
             output to value(cOutputDir + os-getenv("FELIX-SYSTEM-NAME") + ".txt").
                 compileFiles (cInputDir, cOutputDir, cInputPath).
             input close.
         output close.
-        os-command value("type nul > " + os-getenv("TEMP") + "\compile.done").
+        quit.
     end method.
     
     method public integer compileFiles (cInputDirectory as character, cOutputDir as character, cInputPath as character):

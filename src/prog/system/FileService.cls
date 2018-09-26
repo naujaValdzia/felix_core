@@ -11,14 +11,13 @@ class FileService:
 
     {ds/dsFile.i}
     {ds/dsTree.i}
-    {ds/dsFileDto.i}
     
-    method public void listFiles (systemName as character, itemName as character, fileType as character, output dataset dsFileDto):
+    method public void listFiles (systemName as character, itemName as character, fileType as character, output dataset dsFile):
         case fileType:
-            when "Procedure" then findProcedure(itemName, systemName, output dataset dsFileDto).
-            when "Class" then findClass(itemName, systemName, output dataset dsFileDto).
-            when "Include" then findInclude(itemName, systemName, output dataset dsFileDto).
-            when "All" then findAllFiles(itemName, systemName, output dataset dsFileDto).
+            when "Procedure" then findProcedure(itemName, systemName, output dataset dsFile).
+            when "Class" then findClass(itemName, systemName, output dataset dsFile).
+            when "Include" then findInclude(itemName, systemName, output dataset dsFile).
+            when "All" then findAllFiles(itemName, systemName, output dataset dsFile).
         end case.
     end method.
     
@@ -58,7 +57,7 @@ class FileService:
                 ttFile.type = bFile.type.
             end. 
         end.
-        dataset dsfile:accept-changes ().
+        dataset dsFile:accept-changes ().
     end method.   
 
     method public void listUsedBy (usedName as character, 
@@ -97,14 +96,14 @@ class FileService:
             ttfile.info = bFile.info.
             ttfile.type = bFile.type.
         end.
-        dataset dsfile:accept-changes().
+        dataset dsFile:accept-changes().
     end method.
     
     method public void findProcedure (itemName as character, 
                                       systemName as character, 
-                                      output dataset dsFileDto):
+                                      output dataset dsFile):
         define buffer bFile for file.
-        dataset dsFileDto:empty-dataset().
+        dataset dsFile:empty-dataset().
         
         itemName = replace(itemName,".p","").
         for each bFile no-lock where
@@ -116,16 +115,16 @@ class FileService:
                  bFile.info matches (itemName + "~~.p")) 
                  by bFile.compileUnit:
             do:
-                find first ttFileDto where 
-                           ttFileDto.compileUnit = bFile.compileUnit no-error.
-                if not available ttFileDto
+                find first ttFile where 
+                           ttFile.compileUnit = bFile.compileUnit no-error.
+                if not available ttFile
                 then do:
-                    create ttFileDto.
-                    ttFileDto.compileUnit = bFile.compileUnit.
+                    create ttFile.
+                    ttFile.compileUnit = bFile.compileUnit.
                 end.
             end.
         end.
-        dataset dsFileDto:accept-changes().
+        dataset dsFile:accept-changes().
     end method.
     
     method public void findProcedureDetails (compUnit as character, 
@@ -163,9 +162,9 @@ class FileService:
     
     method public void findClass (itemName as character, 
                                   systemName as character, 
-                                  output dataset dsFileDto):
+                                  output dataset dsFile):
     define buffer bFile for file.
-    dataset dsFileDto:empty-dataset().
+    dataset dsFile:empty-dataset().
     
     itemName = replace(itemName,".cls","").
     for each bFile no-lock where 
@@ -181,16 +180,16 @@ class FileService:
              bFile.info matches ("*~~." + itemName + ":*"))
              by bFile.compileUnit:              
         do:
-            find first ttFileDto where 
-                       ttFileDto.compileUnit = bFile.compileUnit no-error.
-            if not available ttFileDto
+            find first ttFile where 
+                       ttFile.compileUnit = bFile.compileUnit no-error.
+            if not available ttFile
             then do:
-                create ttFileDto.
-                ttFileDto.compileUnit = bFile.compileUnit.
+                create ttFile.
+                ttFile.compileUnit = bFile.compileUnit.
             end.
         end.
     end.
-    dataset dsFileDto:accept-changes().
+    dataset dsFile:accept-changes().
     end method.
     
     method public void findClassDetails (compUnit as character, 
@@ -232,9 +231,9 @@ class FileService:
     
     method public void findInclude (itemName as character, 
                                     systemName as character, 
-                                    output dataset dsFileDto):
+                                    output dataset dsFile):
         define buffer bFile for file.
-        dataset dsFileDto:empty-dataset().
+        dataset dsFile:empty-dataset().
         
         itemName = replace(itemName,".i","").
         for each bFile no-lock where 
@@ -246,16 +245,16 @@ class FileService:
                  bFile.info matches(itemName + "~~.i"))
                  by bFile.compileUnit:
             do:
-                find first ttFileDto where 
-                           ttFileDto.compileUnit = bFile.compileUnit no-error.
-                if not available ttFileDto
+                find first ttFile where 
+                           ttFile.compileUnit = bFile.compileUnit no-error.
+                if not available ttFile
                 then do:
-                    create ttFileDto.
-                    ttFileDto.compileUnit = bFile.compileUnit.
+                    create ttFile.
+                    ttFile.compileUnit = bFile.compileUnit.
                 end.
             end.
         end.
-        dataset dsFileDto:accept-changes(). 
+        dataset dsFile:accept-changes(). 
     end method.
 
     method public void findIncludeDetails (compUnit as character, 
@@ -293,9 +292,9 @@ class FileService:
 
     method public void findAllFiles (itemName as character, 
                                      systemName as character, 
-                                     output dataset dsFileDto):  
+                                     output dataset dsFile):  
         define buffer bFile for file.
-        dataset dsFileDto:empty-dataset().
+        dataset dsFile:empty-dataset().
         
         itemName = replace(itemName,".p","").
         itemName = replace(itemName,".cls","").
@@ -324,16 +323,16 @@ class FileService:
                  bFile.info matches(itemName + "~~.i")))) //end of includes search
                  by bFile.compileUnit:
             do:
-                find first ttFileDto where 
-                           ttFileDto.compileUnit = bFile.compileUnit no-error.
-                if not available ttFileDto
+                find first ttFile where 
+                           ttFile.compileUnit = bFile.compileUnit no-error.
+                if not available ttFile
                 then do:
-                    create ttFileDto.
-                    ttFileDto.compileUnit = bFile.compileUnit.
+                    create ttFile.
+                    ttFile.compileUnit = bFile.compileUnit.
                 end.
             end.
         end.
-        dataset dsFileDto:accept-changes(). 
+        dataset dsFile:accept-changes(). 
     end method.
 
     method public void findAllFilesDetails (compUnit as character, 

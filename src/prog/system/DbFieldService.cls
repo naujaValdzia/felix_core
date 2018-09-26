@@ -15,14 +15,14 @@ class DbFieldService:
     method public void getDbFields (fieldName as character, 
                                     systemName as character, 
                                     fieldType as character, 
-                                    output dataset dsDbFieldDto):
+                                    output dataset dsDbField):
         case fieldType:
             when "ACCESS" or 
             when "UPDATE" or 
             when "DELETE" or 
             when "REFERENCE" or 
-            when "INDEX" then findDbField(fieldName, systemName, fieldType, output dataset dsDbFieldDto by-reference).
-            when "ALL" then findAllDbFields(fieldName, systemName, output dataset dsDbFieldDto by-reference).
+            when "INDEX" then findDbField(fieldName, systemName, fieldType, output dataset dsDbField by-reference).
+            when "ALL" then findAllDbFields(fieldName, systemName, output dataset dsDbField by-reference).
         end case.
     end method.
 
@@ -44,9 +44,9 @@ class DbFieldService:
     method public void findDbField (fieldName as character, 
                                    systemName as character, 
                                    fieldType as character,
-                                   output dataset dsDbFieldDto):
+                                   output dataset dsDbField):
         define buffer bDbField for dbField.
-        dataset dsDbFieldDto:empty-dataset().
+        dataset dsDbField:empty-dataset().
         
         for each bDbField no-lock where
                  bDbField.system = systemName and
@@ -54,15 +54,15 @@ class DbFieldService:
                  bDbField.info = fieldName 
                  by bDbField.compileUnit:
                 
-            find first ttDbFieldDto where 
-                       ttDbFieldDto.compileUnit = bDbField.compileUnit no-error.
-            if not available ttDbFieldDto
+            find first ttDbField where 
+                       ttDbField.compileUnit = bDbField.compileUnit no-error.
+            if not available ttDbField
             then do:
-                create ttDbFieldDto.
-                ttDbFieldDto.compileUnit = bDbField.compileUnit.
+                create ttDbField.
+                ttDbField.compileUnit = bDbField.compileUnit.
             end. 
         end.
-        dataset dsDbFieldDto:accept-changes().
+        dataset dsDbField:accept-changes().
     end method.
     
     method public void findDbFieldDetails (compUnit as character, 
@@ -97,9 +97,9 @@ class DbFieldService:
 
     method public void findAllDbFields (fieldName as character, 
                                         systemName as character, 
-                                        output dataset dsDbFieldDto):
+                                        output dataset dsDbField):
         define buffer bDbField for dbField.
-        dataset dsDbFieldDto:empty-dataset().
+        dataset dsDbField:empty-dataset().
         
         for each bDbField no-lock where
                  bDbField.system = systemName and
@@ -109,15 +109,15 @@ class DbFieldService:
                  bDbField.info matches ("*~~." + fieldName + ":*"))
                  by bDbField.compileUnit:
                 
-            find first ttDbFieldDto where 
-                       ttDbFieldDto.compileUnit = bDbField.compileUnit no-error.
-            if not available ttDbFieldDto
+            find first ttDbField where 
+                       ttDbField.compileUnit = bDbField.compileUnit no-error.
+            if not available ttDbField
             then do:
-                create ttDbFieldDto.
-                ttDbFieldDto.compileUnit = bDbField.compileUnit.
+                create ttDbField.
+                ttDbField.compileUnit = bDbField.compileUnit.
             end. 
         end.
-        dataset dsDbFieldDto:accept-changes().
+        dataset dsDbField:accept-changes().
     end method.
     
     method public void findAllDbFieldsDetails (compUnit as character, 
