@@ -1,7 +1,7 @@
 #!/bin/bash
 LOG=createDB.log
 PF=/usr/db/felixdb.pf
-DF=$DLC/servers/pasoe/felix/src/felix_shared/db/felixdb.df
+DF=$DLC/servers/pasoe/felix/dev/felix_shared/db/felixdb.df
 
 mkdir /usr/db
 prodb /usr/db/felixdb.db empty
