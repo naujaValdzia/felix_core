@@ -11,4 +11,4 @@ echo "-db /usr/db/felixdb.db -S 9000" > "$PF"
 
 proserve -pf "$PF"
 
-_progres -b -p "loadDF.p" -param "$DF" -pf "$PF" > "$LOG"
+_progres -b -p "/usr/dlc/servers/pasoe/felix/dev/felix_core/src/scripts/loadDF.p" -param "$DF" -pf "$PF" > "$LOG"
