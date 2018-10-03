@@ -47,7 +47,7 @@ class ConnectSystem:
         define variable iDfCounter as integer no-undo init 0.
         define variable iDbCounter as integer no-undo init 0.
 
-        cError = os-getenv("TEMP") + "\DBerrors.txt".
+        cError = os-getenv("TEMP") + "/DBerrors.txt".
 
         if substr(cPth, length(cPth)) <> "\" and index(cPth, "\") <> 0
         then do:
@@ -101,12 +101,12 @@ class ConnectSystem:
             end.
 
             //cDelDb = "%DLC%\bin\prodel " + cPth + cDbName.
-            cLoadSt = "%DLC%\bin\prostrct add " + cPth + replace(cStName, ".st", "") + " " + cPth + cStName.
+            cLoadSt = "%DLC%/bin/prostrct add " + cPth + replace(cStName, ".st", "") + " " + cPth + cStName.
             if cDbName = ?
             then do:
                 cDbName = replace(cDfName, ".df", "").
-                cDelBi = "%DLC%\bin\prostrct remove " + cPth + cDbName + " bi".
-                cTrunBi = "%DLC%\bin\proutil " + cPth + cDbName + ".db" + " -C truncate bi".
+                cDelBi = "%DLC%/bin/prostrct remove " + cPth + cDbName + " bi".
+                cTrunBi = "%DLC%/bin/proutil " + cPth + cDbName + ".db" + " -C truncate bi".
 
                 create database cPth + cDbName from "EMPTY".
                 if cStName <> ""
@@ -124,8 +124,8 @@ class ConnectSystem:
                 cDbName = replace(cDfName, ".df", "").
                 //os-command value(cDelDb).
 
-                cDelBi = "%DLC%\bin\prostrct remove " + cPth + cDbName + " bi".
-                cTrunBi = "%DLC%\bin\proutil " + cPth + cDbName + ".db" + " -C truncate bi".
+                cDelBi = "%DLC%/bin/prostrct remove " + cPth + cDbName + " bi".
+                cTrunBi = "%DLC%/bin/proutil " + cPth + cDbName + ".db" + " -C truncate bi".
 
                 create database cPth + cDbName from "EMPTY".
                 if cStName <> ""
@@ -163,25 +163,25 @@ class ConnectSystem:
         
         repeat:
             import cFileStream.
-            file-info:file-name = cInputDirectory + "\" + cFileStream.
+            file-info:file-name = cInputDirectory + "/" + cFileStream.
             cFileType = substring (cFileStream, r-index(cFileStream, ".") + 1).
             if index (file-info:file-type, "D") > 0
             then do:
-                input from os-dir(cInputDirectory + "\" + cFileStream).
-                    compileFiles (cInputDirectory + "\" + cFileStream, cOutputDir, cInputPath).
+                input from os-dir(cInputDirectory + "/" + cFileStream).
+                    compileFiles (cInputDirectory + "/" + cFileStream, cOutputDir, cInputPath).
                 input close.
             end.       
             else if cFileType = "p" or cFileType = "cls" or cFileType = "w"
             then do:
                 do on error undo, throw:
                     cPath = cFileStream.
-                    cPath = replace (cPath, "\", "_").
+                    cPath = replace (cPath, "/", "_").
                     cPath = replace (cPath, " ", "").
-                    compile value(cInputDirectory + "\" + cFileStream) save xref value(cOutputDir + subst("&1.xref", cPath)).
+                    compile value(cInputDirectory + "/" + cFileStream) save xref value(cOutputDir + subst("&1.xref", cPath)).
                     
                     catch eSystemError as Progress.Lang.Error :
                         os-command value("del " + cOutputDir + subst("&1.xref", cPath)).
-                        message replace(cInputDirectory + "\" + cFileStream, cInputPath,"").
+                        message replace(cInputDirectory + "/" + cFileStream, cInputPath,"").
                         message eSystemError:GetMessage(1).
                         undo, next.
                     end catch.

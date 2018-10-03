@@ -30,14 +30,14 @@ class FindSystem:
         deleteOldDb(vSystem, cDir).
         iniFileName = createINI(propath + "," + ttSystemInfo.systemPropath + ",").
         os-delete value(os-getenv("TEMP") + "/" + ttSystemInfo.systemName) recursive.
-        temp-table ttSystemInfo:write-json ("file", os-getenv("TEMP") + "\FelixSystemInfo.json", yes).
-        os-command silent value("CompileSystem.bat " + OS-GETENV("TEMP") + "\FelixSystemInfo.json" + " " + iniFileName).
+        temp-table ttSystemInfo:write-json ("file", os-getenv("TEMP") + "/FelixSystemInfo.json", yes).
+        os-command silent value("CompileSystem.bat " + OS-GETENV("TEMP") + "/FelixSystemInfo.json" + " " + iniFileName).
         pause.
         quit.
     end method.
 
     method public character createINI (ppropath as character):
-        iniFileName = os-getenv("TEMP") + "\" + os-getenv("FELIX-SYSTEM-NAME") + "Propath.ini".
+        iniFileName = os-getenv("TEMP") + "/" + os-getenv("FELIX-SYSTEM-NAME") + "Propath.ini".
         output to value(iniFileName).
             put unformatted subst("[Startup] ~nPROPATH= &1~n~n[WinChar Startup]~nPROPATH= &1~n",ppropath).
         output close.

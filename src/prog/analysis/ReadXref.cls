@@ -12,9 +12,9 @@ class ReadXref:
     {tt/ttCompilerParameters.i}
 
     method public void waitForXrefs ():
-        temp-table ttSystemInfo:read-json("file",os-getenv("TEMP") + "\FelixSystemInfo.json","empty").
+        temp-table ttSystemInfo:read-json("file",os-getenv("TEMP") + "/FelixSystemInfo.json","empty").
         find ttSystemInfo.    
-        readFromXrefDir(os-getenv("TEMP") + "\" + ttSystemInfo.systemName + "\", ttSystemInfo.systemName).
+        readFromXrefDir(os-getenv("TEMP") + "/" + ttSystemInfo.systemName + "/", ttSystemInfo.systemName).
         os-delete value(os-getenv("JSON-LOCATION")).
     end method.
 
