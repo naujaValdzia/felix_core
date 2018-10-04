@@ -40,10 +40,10 @@ class SystemService:
             else do:
                 create system.
                 system.systemName = ttSystem.systemName.
-                system.localSourcePath = replace(ttSystem.localSourcePath,"\","/").
-                system.systemPropath = replace(ttSystem.systemPropath,"\","/").
-                system.systemDBparameters = replace(ttSystem.systemDBparameters,"\","/").
-                system.entryPoints = replace(ttSystem.entryPoints,"\","/").                
+                system.localSourcePath = replace(ttSystem.localSourcePath,"~\","/").
+                system.systemPropath = replace(ttSystem.systemPropath,"~\","/").
+                system.systemDBparameters = replace(ttSystem.systemDBparameters,"~\","/").
+                system.entryPoints = replace(ttSystem.entryPoints,"~\","/").                
                 vSuccess = true.
                 vMessage = "System has been successfully created".
             end.

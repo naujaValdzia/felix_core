@@ -7,7 +7,7 @@ mkdir /usr/db
 prodb /usr/db/felixdb.db empty
 
 #create PF
-echo "-db /usr/db/felixdb.db -S 9000" > "$PF"
+echo "-db /usr/db/felixdb.db -S 14440" > "$PF"
 
 proserve -pf "$PF"
 
