@@ -35,7 +35,7 @@ class SystemService:
             if available bSystem
             then do:
                 vSuccess = false.
-                vMessage = "System with with name " + ttSystem.systemName + "already exists. Please choose another one".
+                vMessage = "System with with name " + ttSystem.systemName + " already exists. Please choose another one".
             end.
             else do:
                 create system.

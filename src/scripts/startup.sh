@@ -1,4 +1,4 @@
 #!/bin/bash
-$DLC/servers/pasoe/felix/dev/felix_core/src/scripts/loadDF.sh
+proserve -db /usr/db/felixdb.db -S 14440
 $DLC/servers/pasoe/felix/bin/tcman.sh start
 /bin/bash
