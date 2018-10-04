@@ -10,8 +10,8 @@ echo "-db /usr/db/felixdb.db -S 14440" > "$PF"
 if [ ! -f /usr/db/felixdb.db ]
 then
 	#create empty DB
-	mkdir $DBLOC
-	prodb $DBLOC/usr/db/felixdb.db empty
+	mkdir /usr/db
+	prodb /usr/db/usr/db/felixdb.db empty
 	proserve -pf "$PF"
 	#load DF
 	_progres -b -p "/usr/dlc/servers/pasoe/felix/dev/felix_core/src/scripts/loadDF.p" -param "$DF" -pf "$PF" > "$LOG"
