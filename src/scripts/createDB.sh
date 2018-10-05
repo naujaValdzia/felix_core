@@ -7,10 +7,11 @@ DF=$DLC/servers/pasoe/felix/dev/felix_shared/db/felixdb.df
 #create PF
 echo "-db /usr/db/felixdb.db -S 14440" > "$PF"
 
+mkdir /usr/db
+
 if [ ! -f /usr/db/felixdb.db ]
 then
 	#create empty DB
-	mkdir /usr/db
 	prodb /usr/db/felixdb.db empty
 	proserve -pf "$PF"
 	#load DF
