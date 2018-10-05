@@ -1,21 +1,20 @@
 #!/bin/bash
-LOG=/usr/db/createDB.log
+LOG=/usr/db/db.log
 PF=/usr/db/felixdb.pf
 DF=$DLC/servers/pasoe/felix/dev/felix_shared/db/felixdb.df
-#DBLOC=/usr/db
+DB_PATH=/usr/db
 
 #create PF
-echo "-db /usr/db/felixdb.db -S 14440" > "$PF"
+echo "-db $DB_PATH/felixdb.db -S 14440" > "$PF"
 
-mkdir /usr/db
-
-if [ ! -f /usr/db/felixdb.db ]
+if [ ! -f "$DB_PATH"/felixdb.db ]
 then
 	#create empty DB
-	prodb /usr/db/felixdb.db empty
+	prodb "$DB_PATH"/felixdb.db empty
 	proserve -pf "$PF"
+	
 	#load DF
-	_progres -b -p "/usr/dlc/servers/pasoe/felix/dev/felix_core/src/scripts/loadDF.p" -param "$DF" -pf "$PF" > "$LOG"
+	_progres -b -p "/usr/dlc/servers/pasoe/felix/dev/felix_core/src/scripts/loadDF.p" -param "$DF" -pf "$PF" >> "$LOG"
 else
 	proserve -pf "$PF"
 fi
