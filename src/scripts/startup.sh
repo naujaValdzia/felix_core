@@ -11,8 +11,12 @@ $DLC/servers/pasoe/felix/dev/felix_core/src/scripts/createDB.sh
 $DLC/servers/pasoe/felix/bin/tcman.sh start
 /bin/bash
 
-echo 'Waiting...'
+#TODO start npm
+#cd $DLC/servers/pasoe/felix/dev/felix_front/felix
+#npm start &
 
-trap clean SIGTERM
+trap clean INT SIGINT SIGTERM
+
+echo 'Waiting...'
 
 wait $!
