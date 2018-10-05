@@ -3,6 +3,6 @@
 DB_PATH=/usr/db
 LOG="$DB_PATH"/db.log
 
-echo 'Shutting down DB...' >> "$LOG"
+echo $(date) 'Shutting down DB...' >> "$LOG"
 
 proshut "$DB_PATH"/felixdb.db -by >> "$LOG"
