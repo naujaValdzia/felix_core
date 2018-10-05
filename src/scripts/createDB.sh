@@ -18,3 +18,5 @@ then
 else
 	proserve -pf "$PF"
 fi
+
+echo $(date) 'DB started' >> "$LOG"
