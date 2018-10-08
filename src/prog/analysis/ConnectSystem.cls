@@ -13,17 +13,17 @@ class ConnectSystem:
 
     method public void systemConnect ():
         define variable cDbName as character no-undo.
-        temp-table ttSystemInfo:read-json("file",os-getenv("JSON-LOCATION"),"empty").
-        
+        temp-table ttSystemInfo:read-json("file",os-getenv("JSON_LOCATION"),"empty").
         find ttSystemInfo.
+        propath = propath + ":" + ttSystemInfo.systemPropath.
         if ttSystemInfo.systemDBparameters <> ""
         then do:
             createDB(ttSystemInfo.systemDBparameters, output cDbName).
-            connect value(ttSystemInfo.systemDBparameters + "\" + cDbName) -1 no-error.
+            connect value(ttSystemInfo.systemDBparameters + "/" + cDbName) -1 no-error.
         end.
         os-create-dir value(os-getenv("TEMP") + "/" + ttSystemInfo.systemName).
         
-        CompileXref(ttSystemInfo.localSourcePath, os-getenv("TEMP") + "\" + ttSystemInfo.systemName + "\").
+        CompileXref(ttSystemInfo.localSourcePath, os-getenv("TEMP") + "/" + ttSystemInfo.systemName + "/").
         if ttSystemInfo.systemDBparameters <> ""
         then do:
             disconnect value(cDbName).
@@ -49,14 +49,10 @@ class ConnectSystem:
 
         cError = os-getenv("TEMP") + "/DBerrors.txt".
 
-        if substr(cPth, length(cPth)) <> "\" and index(cPth, "\") <> 0
-        then do:
-            cPth = cPth + "\".
-        end.  
-        else if substr(cPth, length(cPth)) <> "/" and index(cPth, "/") <> 0
+        if substr(cPth, length(cPth)) <> "/" and index(cPth, "/") <> 0
         then do:
             cPth = cPth + "/".
-        end. 
+        end.
             
         input from os-dir(cPth).
         repeat:
@@ -101,12 +97,12 @@ class ConnectSystem:
             end.
 
             //cDelDb = "%DLC%\bin\prodel " + cPth + cDbName.
-            cLoadSt = "%DLC%/bin/prostrct add " + cPth + replace(cStName, ".st", "") + " " + cPth + cStName.
+            cLoadSt = "$DLC/bin/prostrct add " + cPth + replace(cStName, ".st", "") + " " + cPth + cStName.
             if cDbName = ?
             then do:
                 cDbName = replace(cDfName, ".df", "").
-                cDelBi = "%DLC%/bin/prostrct remove " + cPth + cDbName + " bi".
-                cTrunBi = "%DLC%/bin/proutil " + cPth + cDbName + ".db" + " -C truncate bi".
+                cDelBi = "$DLC/bin/prostrct remove " + cPth + cDbName + " bi".
+                cTrunBi = "$DLC/bin/proutil " + cPth + cDbName + ".db" + " -C truncate bi".
 
                 create database cPth + cDbName from "EMPTY".
                 if cStName <> ""
@@ -124,8 +120,8 @@ class ConnectSystem:
                 cDbName = replace(cDfName, ".df", "").
                 //os-command value(cDelDb).
 
-                cDelBi = "%DLC%/bin/prostrct remove " + cPth + cDbName + " bi".
-                cTrunBi = "%DLC%/bin/proutil " + cPth + cDbName + ".db" + " -C truncate bi".
+                cDelBi = "$DLC/bin/prostrct remove " + cPth + cDbName + " bi".
+                cTrunBi = "$DLC/bin/proutil " + cPth + cDbName + ".db" + " -C truncate bi".
 
                 create database cPth + cDbName from "EMPTY".
                 if cStName <> ""
@@ -146,7 +142,7 @@ class ConnectSystem:
         define variable cInputPath as character no-undo.
         cInputPath = cInputDir.
         input from os-dir(cInputDir).
-            output to value(cOutputDir + os-getenv("FELIX-SYSTEM-NAME") + ".txt").
+            output to value(cOutputDir + os-getenv("FELIX_SYSTEM_NAME") + ".txt").
                 compileFiles (cInputDir, cOutputDir, cInputPath).
             input close.
         output close.

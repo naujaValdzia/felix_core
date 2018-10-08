@@ -16,8 +16,8 @@ class FindSystem:
     
     method public void systemFind():
         define variable vSystem as character no-undo.
-        vSystem = os-getenv("FELIX-SYSTEM-NAME").
-        cDir = replace(os-getenv("CURRENT-DIR"),"\","/").
+        vSystem = os-getenv("FELIX_SYSTEM_NAME").
+        cDir = os-getenv("CURRENT_DIR").
         
         find first system where 
                    system.systemName = vSystem.
@@ -28,21 +28,23 @@ class FindSystem:
                ttSystemInfo.systemDBparameters = system.systemDBparameters.
                
         deleteOldDb(vSystem, cDir).
-        iniFileName = createINI(propath + "," + ttSystemInfo.systemPropath + ",").
+        //iniFileName = createINI(propath + "," + ttSystemInfo.systemPropath + ",").
         os-delete value(os-getenv("TEMP") + "/" + ttSystemInfo.systemName) recursive.
         temp-table ttSystemInfo:write-json ("file", os-getenv("TEMP") + "/FelixSystemInfo.json", yes).
-        os-command silent value("CompileSystem.bat " + OS-GETENV("TEMP") + "/FelixSystemInfo.json" + " " + iniFileName).
+        os-command silent value("./CompileSystem.sh " + os-getenv("TEMP") + "/FelixSystemInfo.json").
+        // kodel mum reikejo iniFileName?????????
+        // + " " + iniFileName LN:34
         pause.
         quit.
     end method.
 
-    method public character createINI (ppropath as character):
-        iniFileName = os-getenv("TEMP") + "/" + os-getenv("FELIX-SYSTEM-NAME") + "Propath.ini".
-        output to value(iniFileName).
-            put unformatted subst("[Startup] ~nPROPATH= &1~n~n[WinChar Startup]~nPROPATH= &1~n",ppropath).
-        output close.
-        return iniFileName.
-    end method.
+/*    method public character createINI (ppropath as character):                                            */
+/*        iniFileName = os-getenv("TEMP") + "/" + os-getenv("FELIX_SYSTEM_NAME") + "Propath.ini".           */
+/*        output to value(iniFileName).                                                                     */
+/*            put unformatted subst("[Startup] ~nPROPATH= &1~n~n[WinChar Startup]~nPROPATH= &1~n",ppropath).*/
+/*        output close.                                                                                     */
+/*        return iniFileName.                                                                               */
+/*    end method.                                                                                           */
     
     method public void deleteOldDb (vSystem as character, cDir as character):
         input from os-dir (cDir).

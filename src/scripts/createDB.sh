@@ -20,3 +20,4 @@ else
 fi
 
 echo $(date) 'DB started' >> "$LOG"
+

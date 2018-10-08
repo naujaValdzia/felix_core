@@ -18,7 +18,7 @@ class FindUnused:
     method public void getUnused ():
         define variable vEntryPoints as character format "x(100)" no-undo extent 100.
         
-        vSystem = os-getenv("FELIX-SYSTEM-NAME").
+        vSystem = os-getenv("FELIX_SYSTEM_NAME").
         deleteOldUnused(vSystem).
         
         find first system where 

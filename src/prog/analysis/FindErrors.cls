@@ -10,12 +10,12 @@ block-level on error undo, throw.
 class FindErrors: 
 
     method public void checkErrors ():                                                                                                               
-        input from os-dir(os-getenv("TEMP") + "/" + os-getenv("FELIX-SYSTEM-NAME")).
-        assign file-info:file-name = (os-getenv("TEMP") + "/" + os-getenv("FELIX-SYSTEM-NAME") + "/" + os-getenv("FELIX-SYSTEM-NAME") + ".txt").
+        input from os-dir(os-getenv("TEMP") + "/" + os-getenv("FELIX_SYSTEM_NAME")).
+        assign file-info:file-name = (os-getenv("TEMP") + "/" + os-getenv("FELIX_SYSTEM_NAME") + "/" + os-getenv("FELIX_SYSTEM_NAME") + ".txt").
         if file-info:file-type begins "F" and file-info:file-size <> 0
         then do:
             find first system where 
-                       system.systemName = os-getenv("FELIX-SYSTEM-NAME").
+                       system.systemName = os-getenv("FELIX_SYSTEM_NAME").
             system.hasErrors = true.
             readErrorList().
         end.
@@ -30,9 +30,9 @@ class FindErrors:
         define variable pathLine as character.
         define variable messageLine as character.
         
-        deleteOldError(os-getenv("FELIX-SYSTEM-NAME")).
+        deleteOldError(os-getenv("FELIX_SYSTEM_NAME")).
 
-        fileLocation = (os-getenv("TEMP") + "/" + os-getenv("FELIX-SYSTEM-NAME") + "/" + os-getenv("FELIX-SYSTEM-NAME") + ".txt").
+        fileLocation = (os-getenv("TEMP") + "/" + os-getenv("FELIX_SYSTEM_NAME") + "/" + os-getenv("FELIX_SYSTEM_NAME") + ".txt").
 
         input from value(fileLocation).
         repeat:
@@ -40,19 +40,19 @@ class FindErrors:
             counter2 = counter2 + 1.
             if counter1 mod 2 = 0
             then do:
-                pathLine = replace(lineFromFile,"\","/").
+                pathLine = replace(lineFromFile,"~\","/").
             end.
             else do:
                 if index(lineFromFile,"*") <> 0 
                 then lineFromFile = replace(lineFromFile,"*","").
-                messageLine = replace(lineFromFile,"\","/").
+                messageLine = replace(lineFromFile,"~\","/").
             end.
             if counter2 mod 2 = 0
             then do:
                 create error.
                 error.filePath = pathLine.
                 error.errorMessage = messageLine.
-                error.systemName = os-getenv("FELIX-SYSTEM-NAME").
+                error.systemName = os-getenv("FELIX_SYSTEM_NAME").
             end.
            counter1 = counter1 + 1.
         end.

@@ -15,7 +15,7 @@ class ReadXref:
         temp-table ttSystemInfo:read-json("file",os-getenv("TEMP") + "/FelixSystemInfo.json","empty").
         find ttSystemInfo.    
         readFromXrefDir(os-getenv("TEMP") + "/" + ttSystemInfo.systemName + "/", ttSystemInfo.systemName).
-        os-delete value(os-getenv("JSON-LOCATION")).
+        os-delete value(os-getenv("JSON_LOCATION")).
     end method.
 
     method public void readFromXrefDir (cDir as character, 
@@ -58,7 +58,7 @@ class ReadXref:
         input from value(cPath).
         repeat:
             import unformatted cWholeLine.
-            cWholeLine = replace(cWholeLine,"\","/").
+            cWholeLine = replace(cWholeLine,"~\","/").
             cSourceName = substring(cWholeLine, 1, index(cWholeLine, " ")).
             cWholeLine = substring(cWholeLine, index(cWholeLine, " ") + 1).
             cFileName = substring(cWholeLine, 1, index(cWholeLine, " ")).
@@ -82,7 +82,7 @@ class ReadXref:
                 
             temp = cSourceName.
             repeat numEntriesCounter = 1 to num-entries(ttSystemInfo.systemPropath, ",").
-                temp = replace(temp, replace(entry(numEntriesCounter,ttSystemInfo.systemPropath,",") + "/","\","/"), "").
+                temp = replace(temp, replace(entry(numEntriesCounter,ttSystemInfo.systemPropath,",") + "/","~\","/"), "").
             end.
             cSourcePath = temp.
 
@@ -105,7 +105,7 @@ class ReadXref:
                 if cXrefType = "COMPILE"
                 then do:
                     repeat numEntriesCounter = 1 to num-entries(ttSystemInfo.systemPropath, ",").
-                        cXrefInformation = replace(cXrefInformation, replace(entry(numEntriesCounter,ttSystemInfo.systemPropath,",") + "/","\","/"), "").
+                        cXrefInformation = replace(cXrefInformation, replace(entry(numEntriesCounter,ttSystemInfo.systemPropath,",") + "/","~\","/"), "").
                     end.  
                     cCompileUnit = cXrefInformation.
                 end.
