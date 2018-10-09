@@ -1,5 +1,4 @@
- 
- /*------------------------------------------------------------------------
+/*------------------------------------------------------------------------
     File        : FindUnused
     Notes       : 
   ----------------------------------------------------------------------*/
@@ -17,8 +16,8 @@ class FindUnused:
     
     method public void getUnused ():
         define variable vEntryPoints as character format "x(100)" no-undo extent 100.
-        
         vSystem = os-getenv("FELIX_SYSTEM_NAME").
+        
         deleteOldUnused(vSystem).
         
         find first system where 
@@ -45,7 +44,7 @@ class FindUnused:
                 unused.info = bused.info.
             end.
         end.
-    end method.
+    end.
     
     /*------------------------------------------------------------------------------
      Purpose: To assign files as "used"

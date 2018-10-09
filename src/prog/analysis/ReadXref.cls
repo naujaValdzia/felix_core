@@ -1,4 +1,3 @@
- 
  /*------------------------------------------------------------------------
     File        : ReadXref
     Notes       : 
@@ -50,9 +49,10 @@ class ReadXref:
         define variable i3 as integer no-undo.
         define variable numEntriesCounter as integer no-undo.
         define variable cSourcePath as character no-undo.
+        define variable cEntry as character no-undo.
         define variable temp as character no-undo. //used for temporary data
         
-        if length(ttSystemInfo.systemPropath) = r-index(ttSystemInfo.systemPropath,",") 
+        if length(ttSystemInfo.systemPropath) = r-index(ttSystemInfo.systemPropath,":") 
         then ttSystemInfo.systemPropath = substring(ttSystemInfo.systemPropath,1,length(ttSystemInfo.systemPropath) - 1).
 
         input from value(cPath).
@@ -81,8 +81,15 @@ class ReadXref:
             end.
                 
             temp = cSourceName.
-            repeat numEntriesCounter = 1 to num-entries(ttSystemInfo.systemPropath, ",").
-                temp = replace(temp, replace(entry(numEntriesCounter,ttSystemInfo.systemPropath,",") + "/","~\","/"), "").
+            repeat numEntriesCounter = 1 to num-entries(ttSystemInfo.systemPropath, ":").
+                cEntry = entry(numEntriesCounter,ttSystemInfo.systemPropath,":").
+                cEntry = replace(cEntry,"~\","/").
+                cEntry = replace(cEntry,"//","/").
+                if length(cEntry) = r-index(cEntry,"/")
+                    then do:
+                        cEntry = substring(cEntry,1,length(cEntry) - 1).
+                    end.
+            temp = replace(temp, cEntry + "/", "").
             end.
             cSourcePath = temp.
 
@@ -104,8 +111,15 @@ class ReadXref:
                 end.
                 if cXrefType = "COMPILE"
                 then do:
-                    repeat numEntriesCounter = 1 to num-entries(ttSystemInfo.systemPropath, ",").
-                        cXrefInformation = replace(cXrefInformation, replace(entry(numEntriesCounter,ttSystemInfo.systemPropath,",") + "/","~\","/"), "").
+                    repeat numEntriesCounter = 1 to num-entries(ttSystemInfo.systemPropath, ":").
+                        cEntry = entry(numEntriesCounter,ttSystemInfo.systemPropath,":").
+                        cEntry = replace(cEntry,"~\","/").
+                        cEntry = replace(cEntry,"//","/").
+                        if length(cEntry) = r-index(cEntry,"/")
+                            then do:
+                                cEntry = substring(cEntry,1,length(cEntry) - 1).
+                            end.
+                        cXrefInformation = replace(cXrefInformation, cEntry + "/", "").
                     end.  
                     cCompileUnit = cXrefInformation.
                 end.
@@ -188,7 +202,7 @@ class ReadXref:
             end.
             else if cXrefType = "ACCESS" or cXrefType = "UPDATE" or cXrefType = "REFERENCE" or cXrefType = "DELETE"
             then do:
-                if index(cXrefInformation, "INHERITED") <> 0 or 
+                if index(cXrefInformation, "INHERITED") <> 0 or
                    index(cXrefInformation, "PUBLIC") <> 0
                 then do:
                     create file.

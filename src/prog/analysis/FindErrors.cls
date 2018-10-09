@@ -1,5 +1,4 @@
- 
- /*------------------------------------------------------------------------
+/*------------------------------------------------------------------------
     File        : FindErrors
     Notes       : 
   ----------------------------------------------------------------------*/
@@ -9,20 +8,25 @@ block-level on error undo, throw.
 
 class FindErrors: 
 
-    method public void checkErrors ():                                                                                                               
-        input from os-dir(os-getenv("TEMP") + "/" + os-getenv("FELIX_SYSTEM_NAME")).
-        assign file-info:file-name = (os-getenv("TEMP") + "/" + os-getenv("FELIX_SYSTEM_NAME") + "/" + os-getenv("FELIX_SYSTEM_NAME") + ".txt").
+    define variable cName as character no-undo.
+    
+    
+    method public void checkErrors ():  
+        cName = os-getenv("FELIX_SYSTEM_NAME").  
+                                                                                                                   
+        input from os-dir(os-getenv("TEMP") + "/" + cName).
+        assign file-info:file-name = (os-getenv("TEMP") + "/" + cName + "/" + cName + ".txt").
         if file-info:file-type begins "F" and file-info:file-size <> 0
         then do:
             find first system where 
-                       system.systemName = os-getenv("FELIX_SYSTEM_NAME").
+                       system.systemName = cName.
             system.hasErrors = true.
-            readErrorList().
+            readErrorList(cName).
         end.
         input close.
     end method.
 
-    method public void readErrorList():
+    method public void readErrorList(cName as character):
         define variable lineFromFile as character.
         define variable fileLocation as character no-undo.
         define variable counter1 as integer no-undo.
@@ -30,9 +34,9 @@ class FindErrors:
         define variable pathLine as character.
         define variable messageLine as character.
         
-        deleteOldError(os-getenv("FELIX_SYSTEM_NAME")).
+        deleteOldError(cName).
 
-        fileLocation = (os-getenv("TEMP") + "/" + os-getenv("FELIX_SYSTEM_NAME") + "/" + os-getenv("FELIX_SYSTEM_NAME") + ".txt").
+        fileLocation = (os-getenv("TEMP") + "/" + cName + "/" + cName + ".txt").
 
         input from value(fileLocation).
         repeat:
@@ -52,7 +56,7 @@ class FindErrors:
                 create error.
                 error.filePath = pathLine.
                 error.errorMessage = messageLine.
-                error.systemName = os-getenv("FELIX_SYSTEM_NAME").
+                error.systemName = cName.
             end.
            counter1 = counter1 + 1.
         end.
