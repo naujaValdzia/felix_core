@@ -19,17 +19,6 @@ class SystemService:
         
         if ttSystem.systemName <> "" 
         then do:
-            if index(ttSystem.systemPropath,";") <> 0 or
-               index(ttSystem.entryPoints,";") <> 0 or
-               index(ttSystem.systemDBparameters,";") <> 0 or
-               index(ttSystem.localSourcePath,";") <> 0
-            then do:
-                ttSystem.systemPropath = replace(ttSystem.systemPropath,";",",").
-                ttSystem.entryPoints = replace(ttSystem.entryPoints,";",",").
-                ttSystem.systemDBparameters = replace(ttSystem.systemDBparameters,";",",").
-                ttSystem.localSourcePath = replace(ttSystem.localSourcePath,";",",").
-            end.
-                
             find first bSystem where
                        bSystem.systemName = ttSystem.systemName no-error.
             if available bSystem
@@ -40,10 +29,10 @@ class SystemService:
             else do:
                 create system.
                 system.systemName = ttSystem.systemName.
-                system.localSourcePath = replace(ttSystem.localSourcePath,"~\","/").
-                system.systemPropath = replace(ttSystem.systemPropath,"~\","/").
-                system.systemDBparameters = replace(ttSystem.systemDBparameters,"~\","/").
-                system.entryPoints = replace(ttSystem.entryPoints,"~\","/").                
+                system.localSourcePath = AnalysisUtility:fixInput(ttSystem.localSourcePath).
+                system.systemPropath = AnalysisUtility:fixPropathInput(ttSystem.systemPropath).
+                system.systemDBparameters = AnalysisUtility:fixInput(ttSystem.systemDBparameters).
+                system.entryPoints = AnalysisUtility:fixInput(ttSystem.entryPoints).                
                 vSuccess = true.
                 vMessage = "System has been successfully created".
             end.
@@ -96,16 +85,10 @@ class SystemService:
             if available system
             then do:
                 buffer-copy ttSystem except ttSystem.systemName ttSystem.id ttSystem.hasErrors to system.
-                if index(system.systemPropath,";") <> 0 or
-                   index(system.entryPoints,";") <> 0 or
-                   index(system.systemDBparameters,";") <> 0 or
-                   index(system.localSourcePath,";") <> 0
-                then do:
-                    system.systemPropath = replace(system.systemPropath,";",",").
-                    system.entryPoints = replace(system.entryPoints,";",",").
-                    system.systemDBparameters = replace(system.systemDBparameters,";",",").
-                    system.localSourcePath = replace(system.localSourcePath,";",",").
-                end.
+                system.systemPropath = AnalysisUtility:fixPropathInput(system.systemPropath).
+                system.entryPoints = AnalysisUtility:fixInput(system.entryPoints).
+                system.systemDBparameters = AnalysisUtility:fixInput(system.systemDBparameters).
+                system.localSourcePath = AnalysisUtility:fixInput(system.localSourcePath).
                 vSuccess = true.
                 vMessage = "System has been successfully updated".
             end.

@@ -30,4 +30,22 @@ class AnalysisUtility:
         end.     
         return cPath.
     end method.
+    
+    method public static character fixInput (userInput as character):
+        userInput = replace(userInput,"~\","/").
+        userInput = replace(userInput,";",",").
+        userInput = replace(userInput,":",",").
+        userInput = replace(userInput,"//","/").
+        userInput = replace(userInput," ","").
+        return userInput.
+    end method.
+    
+    method public static character fixPropathInput (userInput as character):
+        userInput = replace(userInput,"~\","/").
+        userInput = replace(userInput,";",":").
+        userInput = replace(userInput,",",":").
+        userInput = replace(userInput,"//","/").
+        userInput = replace(userInput," ","").
+        return userInput.
+    end method.
 end class.
