@@ -22,9 +22,9 @@ class FindSystem:
                    system.systemName = vSystem.
         create ttSystemInfo.
                ttSystemInfo.systemName = system.systemName.
-               ttSystemInfo.localSourcePath = system.localSourcePath.
-               ttSystemInfo.systemPropath = system.systemPropath.
-               ttSystemInfo.systemDBparameters = system.systemDBparameters.
+               ttSystemInfo.localSourcePath = AnalysisUtility:addPath(system.localSourcePath).
+               ttSystemInfo.systemPropath = AnalysisUtility:addPropathPath(system.systemPropath).
+               ttSystemInfo.systemDBparameters = AnalysisUtility:addPath(system.systemDBparameters).
                
         deleteOldDb(vSystem, cDir).
 

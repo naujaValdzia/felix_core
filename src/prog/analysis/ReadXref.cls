@@ -51,10 +51,7 @@ class ReadXref:
         define variable cSourcePath as character no-undo.
         define variable cEntry as character no-undo.
         define variable temp as character no-undo. //used for temporary data
-        
-        if length(ttSystemInfo.systemPropath) = r-index(ttSystemInfo.systemPropath,":") 
-        then ttSystemInfo.systemPropath = substring(ttSystemInfo.systemPropath,1,length(ttSystemInfo.systemPropath) - 1).
-
+                
         input from value(cPath).
         repeat:
             import unformatted cWholeLine.
@@ -83,8 +80,6 @@ class ReadXref:
             temp = cSourceName.
             repeat numEntriesCounter = 1 to num-entries(ttSystemInfo.systemPropath, ":").
                 cEntry = entry(numEntriesCounter,ttSystemInfo.systemPropath,":").
-                cEntry = replace(cEntry,"~\","/").
-                cEntry = replace(cEntry,"//","/").
                 if length(cEntry) = r-index(cEntry,"/")
                     then do:
                         cEntry = substring(cEntry,1,length(cEntry) - 1).
@@ -113,8 +108,6 @@ class ReadXref:
                 then do:
                     repeat numEntriesCounter = 1 to num-entries(ttSystemInfo.systemPropath, ":").
                         cEntry = entry(numEntriesCounter,ttSystemInfo.systemPropath,":").
-                        cEntry = replace(cEntry,"~\","/").
-                        cEntry = replace(cEntry,"//","/").
                         if length(cEntry) = r-index(cEntry,"/")
                             then do:
                                 cEntry = substring(cEntry,1,length(cEntry) - 1).

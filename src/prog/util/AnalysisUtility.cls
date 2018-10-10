@@ -48,4 +48,54 @@ class AnalysisUtility:
         userInput = replace(userInput," ","").
         return userInput.
     end method.
+    
+    method public static character addPropathPath (path as character):
+        define variable numEntriesCounter as integer.
+        define variable cEntry as character no-undo.
+        define variable outPath as character no-undo.
+        
+        path = deleteLastSymbol(path).
+        repeat numEntriesCounter = 1 to num-entries(path,":"):
+            cEntry = entry(numEntriesCounter,path,":").
+            if index(cEntry,"/") = 1
+            then do:
+                cEntry = substring(cEntry,2,length(cEntry)).
+            end.
+            cEntry = "/usr/sources/" + cEntry + ":".
+            outPath = outPath + cEntry.
+        end.
+        outPath = deleteLastSymbol(outPath).
+        return outPath.
+    end method.
+    
+    method public static character addPath (path as character):
+        define variable numEntriesCounter as integer.
+        define variable cEntry as character no-undo.
+        define variable outPath as character no-undo.
+        
+        path = deleteLastSymbol(path).
+        repeat numEntriesCounter = 1 to num-entries(path,","):
+            cEntry = entry(numEntriesCounter,path,",").
+            if index(cEntry,"/") = 1
+            then do:
+                cEntry = substring(cEntry,2,length(cEntry)).
+            end.
+            cEntry = "/usr/sources/" + cEntry + ",".
+            outPath = outPath + cEntry.
+        end.
+        outPath = deleteLastSymbol(outPath).
+        return outPath.
+    end method.
+    
+    method public static character deleteLastSymbol (theLine as character):
+        if length(theLine) = r-index(theLine,",")
+        then theLine = substring(theLine,1,length(theLine) - 1).
+        return theLine.
+    end method.    
+    
+    method public static character deleteFirstSymbol (theLine as character):
+        if length(theLine) = r-index(theLine,",")
+        then theLine = substring(theLine,1,length(theLine) - 1).
+        return theLine.
+    end method.  
 end class.
