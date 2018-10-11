@@ -20,10 +20,7 @@ class FindErrors:
         then do:
             find first system where 
                        system.systemName = cName.
-            if system.hasErrors = false
-            then do:
-                system.hasErrors = true.
-            end.
+            system.hasErrors = true.
             readErrorList(cName).
         end.
         input close.
@@ -47,12 +44,12 @@ class FindErrors:
             counter2 = counter2 + 1.
             if counter1 mod 2 = 0
             then do:
-                pathLine = replace(lineFromFile,"~\","/").
+                pathLine = lineFromFile.
             end.
             else do:
                 if index(lineFromFile,"*") <> 0 
                 then lineFromFile = replace(lineFromFile,"*","").
-                messageLine = replace(lineFromFile,"~\","/").
+                messageLine = lineFromFile.
             end.
             if counter2 mod 2 = 0
             then do:

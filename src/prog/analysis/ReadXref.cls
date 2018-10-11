@@ -11,7 +11,7 @@ class ReadXref:
     {tt/ttCompilerParameters.i}
 
     method public void waitForXrefs ():
-        temp-table ttSystemInfo:read-json("file",os-getenv("TEMP") + "/FelixSystemInfo.json","empty").
+        temp-table ttSystemInfo:read-json("file",os-getenv("TEMP") + "/" + os-getenv("FELIX_SYSTEM_NAME") + "Info.json","empty").
         find ttSystemInfo.    
         readFromXrefDir(os-getenv("TEMP") + "/" + ttSystemInfo.systemName + "/", ttSystemInfo.systemName).
         os-delete value(os-getenv("JSON_LOCATION")).
@@ -55,7 +55,7 @@ class ReadXref:
         input from value(cPath).
         repeat:
             import unformatted cWholeLine.
-            cWholeLine = replace(cWholeLine,"~\","/").
+            cWholeLine = cWholeLine.
             cSourceName = substring(cWholeLine, 1, index(cWholeLine, " ")).
             cWholeLine = substring(cWholeLine, index(cWholeLine, " ") + 1).
             cFileName = substring(cWholeLine, 1, index(cWholeLine, " ")).

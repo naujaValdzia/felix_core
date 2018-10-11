@@ -20,19 +20,20 @@ export PROPATH="$PROPATH:$DLC/servers/pasoe/felix/dev/felix_shared/analysis/i"
 
 echo [1] Initializing system setup
 echo [2] System is now creating .db file and loading data from .df and .st
-echo [3] System is now generating Xref files
 
+echo [3] System is now generating Xref files
 _progres -b -p ../prog/analysis/systemFind.p -pf "$PF"
 wait
-
 echo Xref compilation is now complete. Proceeding.
-echo [4] System is now searching for errors that may have occurred while generating Xref files.
 
+echo [4] System is now searching for errors that may have occurred while generating Xref files.
 _progres -b -p ../prog/analysis/systemError.p -pf "$PF"
 wait
 echo Search complete
-echo [5] Starting Xref analysis...
 
+echo [5] Starting Xref analysis...
 _progres -b -p ../prog/analysis/xrefAnalysis.p -pf "$PF"
 wait
-echo Xref analysis complete. 
+echo Xref analysis complete
+
+echo SETUP COMPLETE

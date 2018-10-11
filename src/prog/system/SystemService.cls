@@ -10,11 +10,13 @@ block-level on error undo, throw.
 class SystemService: 
     
     {ds/dsSystem.i}
+    define variable masterEnable as logical no-undo.
     
     method public void createSystem (dataset dsSystem,
                                      output vSuccess as logical,
                                      output vMessage as character):
         define buffer bSystem for system.
+        masterEnable = false.
         find ttSystem.
         
         if ttSystem.systemName <> "" 
@@ -29,10 +31,10 @@ class SystemService:
             else do:
                 create system.
                 system.systemName = ttSystem.systemName.
-                system.localSourcePath = AnalysisUtility:fixInput(ttSystem.localSourcePath).
-                system.systemPropath = AnalysisUtility:fixPropathInput(ttSystem.systemPropath).
-                system.systemDBparameters = AnalysisUtility:fixInput(ttSystem.systemDBparameters).
-                system.entryPoints = AnalysisUtility:fixInput(ttSystem.entryPoints).                
+                system.localSourcePath = AnalysisUtility:fixInput(ttSystem.localSourcePath,masterEnable).
+                system.systemPropath = AnalysisUtility:fixPropathInput(ttSystem.systemPropath,masterEnable).
+                system.systemDBparameters = AnalysisUtility:fixInput(ttSystem.systemDBparameters,masterEnable).
+                system.entryPoints = AnalysisUtility:fixInput(ttSystem.entryPoints,masterEnable).                
                 vSuccess = true.
                 vMessage = "System has been successfully created".
             end.
@@ -77,6 +79,7 @@ class SystemService:
     method public void updateSystem (dataset dsSystem,
                                      output vSuccess as logical,
                                      output vMessage as character):
+        masterEnable = false.
         for each ttSystem: 
             do on error undo, throw:
             find first system where 
@@ -85,10 +88,10 @@ class SystemService:
             if available system
             then do:
                 buffer-copy ttSystem except ttSystem.systemName ttSystem.id ttSystem.hasErrors to system.
-                system.systemPropath = AnalysisUtility:fixPropathInput(system.systemPropath).
-                system.entryPoints = AnalysisUtility:fixInput(system.entryPoints).
-                system.systemDBparameters = AnalysisUtility:fixInput(system.systemDBparameters).
-                system.localSourcePath = AnalysisUtility:fixInput(system.localSourcePath).
+                system.systemPropath = AnalysisUtility:fixPropathInput(system.systemPropath,masterEnable).
+                system.entryPoints = AnalysisUtility:fixInput(system.entryPoints,masterEnable).
+                system.systemDBparameters = AnalysisUtility:fixInput(system.systemDBparameters,masterEnable).
+                system.localSourcePath = AnalysisUtility:fixInput(system.localSourcePath,masterEnable).
                 vSuccess = true.
                 vMessage = "System has been successfully updated".
             end.

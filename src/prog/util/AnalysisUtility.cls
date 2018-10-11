@@ -31,22 +31,34 @@ class AnalysisUtility:
         return cPath.
     end method.
     
-    method public static character fixInput (userInput as character):
-        userInput = replace(userInput,"~\","/").
-        userInput = replace(userInput,";",",").
-        userInput = replace(userInput,":",",").
-        userInput = replace(userInput,"//","/").
-        userInput = replace(userInput," ","").
-        return userInput.
+    method public static character fixInput (userInput as character, isEnabled as logical):
+        if isEnabled = false
+        then do:
+            return userInput.
+        end.
+        else do:
+            userInput = replace(userInput,"~\","/").
+            userInput = replace(userInput,";",",").
+            userInput = replace(userInput,":",",").
+            userInput = replace(userInput,"//","/").
+            userInput = replace(userInput," ","").
+            return userInput.
+        end.
     end method.
     
-    method public static character fixPropathInput (userInput as character):
-        userInput = replace(userInput,"~\","/").
-        userInput = replace(userInput,";",":").
-        userInput = replace(userInput,",",":").
-        userInput = replace(userInput,"//","/").
-        userInput = replace(userInput," ","").
-        return userInput.
+    method public static character fixPropathInput (userInput as character, isEnabled as logical):
+        if isEnabled = false
+        then do:
+            return userInput.
+        end.
+        else do:
+            userInput = replace(userInput,"~\","/").
+            userInput = replace(userInput,";",":").
+            userInput = replace(userInput,",",":").
+            userInput = replace(userInput,"//","/").
+            userInput = replace(userInput," ","").
+            return userInput.
+        end.
     end method.
     
     method public static character addPropathPath (path as character):

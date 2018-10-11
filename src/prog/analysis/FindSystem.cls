@@ -15,8 +15,10 @@ class FindSystem:
     
     method public void systemFind():
         define variable vSystem as character no-undo.
+        define variable jsonLoc as character no-undo.
         vSystem = os-getenv("FELIX_SYSTEM_NAME").
-        cDir = replace(os-getenv("CURRENT_DIR"),"~\","/").
+        cDir = os-getenv("CURRENT_DIR").
+        jsonLoc = os-getenv("TEMP") + "/" + vSystem + "Info.json".
         
         find first system where 
                    system.systemName = vSystem.
@@ -25,12 +27,11 @@ class FindSystem:
                ttSystemInfo.localSourcePath = AnalysisUtility:addPath(system.localSourcePath).
                ttSystemInfo.systemPropath = AnalysisUtility:addPropathPath(system.systemPropath).
                ttSystemInfo.systemDBparameters = AnalysisUtility:addPath(system.systemDBparameters).
-               
-        deleteOldDb(vSystem, cDir).
 
+        deleteOldDb(vSystem, cDir).
         os-delete value(os-getenv("TEMP") + "/" + ttSystemInfo.systemName) recursive.
-        temp-table ttSystemInfo:write-json ("file", os-getenv("TEMP") + "/FelixSystemInfo.json", yes).
-        os-command silent value("./CompileSystem.sh " + OS-GETENV("TEMP") + "/FelixSystemInfo.json").
+        temp-table ttSystemInfo:write-json ("file", jsonLoc, yes).
+        os-command silent value("./CompileSystem.sh " + jsonLoc).
         pause.
         quit.
     end method.

@@ -96,7 +96,6 @@ class ConnectSystem:
                 undo creation, leave creation.
             end.
 
-            //cDelDb = "%DLC%\bin\prodel " + cPth + cDbName.
             cLoadSt = "$DLC/bin/prostrct add " + cPth + replace(cStName, ".st", "") + " " + cPth + cStName.
             if cDbName = ?
             then do:
