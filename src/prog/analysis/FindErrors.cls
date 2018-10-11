@@ -20,7 +20,10 @@ class FindErrors:
         then do:
             find first system where 
                        system.systemName = cName.
-            system.hasErrors = true.
+            if system.hasErrors = false
+            then do:
+                system.hasErrors = true.
+            end.
             readErrorList(cName).
         end.
         input close.

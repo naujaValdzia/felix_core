@@ -54,17 +54,24 @@ class AnalysisUtility:
         define variable cEntry as character no-undo.
         define variable outPath as character no-undo.
         
-        path = deleteLastSymbol(path).
+        path = deleteLastSymbol(path,":").
+        path = deleteLastSymbol(path,"/").
         repeat numEntriesCounter = 1 to num-entries(path,":"):
             cEntry = entry(numEntriesCounter,path,":").
             if index(cEntry,"/") = 1
             then do:
                 cEntry = substring(cEntry,2,length(cEntry)).
             end.
-            cEntry = "/usr/sources/" + cEntry + ":".
+            if numEntriesCounter = num-entries(path,":")
+            then do:
+                cEntry = "/usr/sources/" + cEntry.
+            end.
+            else do:
+                cEntry = "/usr/sources/" + cEntry + ":".
+            end.
             outPath = outPath + cEntry.
         end.
-        outPath = deleteLastSymbol(outPath).
+        outPath = deleteLastSymbol(outPath,":").
         return outPath.
     end method.
     
@@ -73,7 +80,8 @@ class AnalysisUtility:
         define variable cEntry as character no-undo.
         define variable outPath as character no-undo.
         
-        path = deleteLastSymbol(path).
+        path = deleteLastSymbol(path,",").
+        path = deleteLastSymbol(path,"/").
         repeat numEntriesCounter = 1 to num-entries(path,","):
             cEntry = entry(numEntriesCounter,path,",").
             if index(cEntry,"/") = 1
@@ -83,19 +91,13 @@ class AnalysisUtility:
             cEntry = "/usr/sources/" + cEntry + ",".
             outPath = outPath + cEntry.
         end.
-        outPath = deleteLastSymbol(outPath).
+        outPath = deleteLastSymbol(outPath,",").
         return outPath.
     end method.
     
-    method public static character deleteLastSymbol (theLine as character):
-        if length(theLine) = r-index(theLine,",")
+    method public static character deleteLastSymbol (theLine as character, symbol as character):
+        if length(theLine) = r-index(theLine,symbol)
         then theLine = substring(theLine,1,length(theLine) - 1).
         return theLine.
     end method.    
-    
-    method public static character deleteFirstSymbol (theLine as character):
-        if length(theLine) = r-index(theLine,",")
-        then theLine = substring(theLine,1,length(theLine) - 1).
-        return theLine.
-    end method.  
 end class.

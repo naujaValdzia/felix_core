@@ -79,12 +79,8 @@ class ReadXref:
                 
             temp = cSourceName.
             repeat numEntriesCounter = 1 to num-entries(ttSystemInfo.systemPropath, ":").
-                cEntry = entry(numEntriesCounter,ttSystemInfo.systemPropath,":").
-                if length(cEntry) = r-index(cEntry,"/")
-                    then do:
-                        cEntry = substring(cEntry,1,length(cEntry) - 1).
-                    end.
-            temp = replace(temp, cEntry + "/", "").
+                cEntry = entry(numEntriesCounter,ttSystemInfo.systemPropath,":") + "/".
+                temp = replace(temp,cEntry,"").
             end.
             cSourcePath = temp.
 
@@ -107,12 +103,8 @@ class ReadXref:
                 if cXrefType = "COMPILE"
                 then do:
                     repeat numEntriesCounter = 1 to num-entries(ttSystemInfo.systemPropath, ":").
-                        cEntry = entry(numEntriesCounter,ttSystemInfo.systemPropath,":").
-                        if length(cEntry) = r-index(cEntry,"/")
-                            then do:
-                                cEntry = substring(cEntry,1,length(cEntry) - 1).
-                            end.
-                        cXrefInformation = replace(cXrefInformation, cEntry + "/", "").
+                        cEntry = entry(numEntriesCounter,ttSystemInfo.systemPropath,":") + "/".
+                        cXrefInformation = replace(cXrefInformation,cEntry,"").
                     end.  
                     cCompileUnit = cXrefInformation.
                 end.
