@@ -10,12 +10,13 @@ block-level on error undo, throw.
 class SystemService: 
     
     {ds/dsSystem.i}
-    define variable masterEnable as logical no-undo init true. //used to enable or disable system window auto correct 
+    define variable masterEnable as logical no-undo. //used to enable or disable system window auto correct 
     
     method public void createSystem (dataset dsSystem,
                                      output vSuccess as logical,
                                      output vMessage as character):
         define buffer bSystem for system.
+        masterEnable = true.
         find ttSystem.
         
         if ttSystem.systemName <> "" 
@@ -78,6 +79,7 @@ class SystemService:
     method public void updateSystem (dataset dsSystem,
                                      output vSuccess as logical,
                                      output vMessage as character):
+        masterEnable = true.
         for each ttSystem: 
             do on error undo, throw:
             find first system where 
